@@ -20,20 +20,24 @@ function ovaToVhd ($sourceOVA) {
 
     
     
-    
+   $findVMDK = Get-ChildItem $outdir -Filter *.vmdk
     
     #Create the variables for output files
 
-    $sourceOVAName = Get-ItemProperty $sourceOVA
-    $sourceOVAName = $sourceOVAName.Name
-    $sourceOVANameVMDK = $sourceOVAName -replace '.ova', '-disk001.vmdk'
-    $sourceOVANameVHD = $sourceOVAName -replace '.ova', '-disk001.vhd'
+    $VMDK = Get-ItemProperty $outdir\$findVMDK
+    write-host $VMDK
 
+    $VHD = $VMDK -replace '.vmdk', '.vhd'
+    Write-Host $VHD
     #convert the vmdk to vhd
     Set-Location 'C:\Program Files\Oracle\VirtualBox\'
-    ./VBoxManage.exe clonehd --format vhd $outdir\$sourceOVANameVMDK $outdir\$sourceOVANameVHD
+    ./VBoxManage.exe clonehd --format vhd $VMDK $VHD
+
+
+
+    Write-Host $outdir\$sourceOVANameVMDK
 }
 
-ovaToVhd -SourceOVA C:\VM\Window10.ova
+ovaToVhd -SourceOVA C:\VM\basic_pentesting_1.ova
 
 
